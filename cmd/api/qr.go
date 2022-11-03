@@ -1,16 +1,27 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
+	"pqrgen/internal/data"
+	"time"
 )
 
-func genQrHandler(w http.ResponseWriter, r *http.Request) {
-	fmt.Fprintln(w, "Generate qrcode")
-}
+func (app *application) showUrlHandler(w http.ResponseWriter, r *http.Request) {
+	id, err := app.readIDParam(r)
+	if err != nil {
+		app.notFoundResponse(w, r)
+		return
+	}
 
-func showQrHandler(w http.ResponseWriter, r *http.Request) {
+	urlData := data.UrlData{
+		ID:             id,
+		CreatedAt:      time.Now(),
+		Url:            "The url to encode",
+		Downloadswitch: true,
+	}
 
-	id := r.URL.Query().Get(":id")
-	fmt.Fprintf(w, "Show  qrcode %s", id)
+	err = app.writeJSON(w, http.StatusOK, envelope{"urlData": urlData}, nil)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+	}
 }

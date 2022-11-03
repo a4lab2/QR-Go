@@ -9,6 +9,16 @@ import (
 	"time"
 )
 
+// func genCode() {
+// 	str := "mailto:a@mail.com&subject=Mail subject&body=Random text body"
+// 	qrFname := "qr.png"
+
+// 	err := qrcode.WriteFile(str, qrcode.Medium, 256, qrFname)
+// 	if err != nil {
+// 		panic(err)
+// 	}
+// }
+
 type config struct {
 	port int
 	env  string
@@ -42,4 +52,5 @@ func main() {
 	logger.Printf("starting %s server on %s", cfg.env, srv.Addr)
 	err := srv.ListenAndServe()
 	logger.Fatal(err)
+	// genCode()
 }
