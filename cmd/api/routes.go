@@ -3,19 +3,19 @@ package main
 import (
 	"net/http"
 
-	"github.com/bmizerany/pat"
+	"github.com/julienschmidt/httprouter"
 )
 
 func (app *application) routes() http.Handler {
 
-	m := pat.New()
+	router := httprouter.New()
+	router.NotFound = http.HandlerFunc(app.notFoundResponse)
+	router.MethodNotAllowed = http.HandlerFunc(app.methodNotAllowedResponse)
 
-	m.NotFound = http.HandlerFunc(app.notFoundResponse)
-	// m.MethodNotAllowed = http.HandlerFunc(app.methodNotAllowedResponse)
+	router.HandlerFunc(http.MethodGet, "/v1/healthcheck", app.healthcheckHandler)
+	// router.HandlerFunc(http.MethodPost, "/v1/generate", app.createUrlHandler)
+	// router.HandlerFunc(http.MethodGet, "/v1/qr/url/:id", app.showUrlHandler)
+	router.HandlerFunc(http.MethodGet, "/v1/qr/generate", app.generateImageHandler)
 
-	m.Get("/v1/healthcheck", http.HandlerFunc(app.healthcheckHandler))
-
-	m.Get("/v1/qr/:id", http.HandlerFunc(app.showUrlHandler))
-
-	return m
+	return router
 }

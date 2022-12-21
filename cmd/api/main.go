@@ -9,16 +9,6 @@ import (
 	"time"
 )
 
-// func genCode() {
-// 	str := "mailto:a@mail.com&subject=Mail subject&body=Random text body"
-// 	qrFname := "qr.png"
-
-// 	err := qrcode.WriteFile(str, qrcode.Medium, 256, qrFname)
-// 	if err != nil {
-// 		panic(err)
-// 	}
-// }
-
 type config struct {
 	port int
 	env  string
@@ -32,7 +22,7 @@ type application struct {
 func main() {
 	var cfg config
 
-	flag.IntVar(&cfg.port, "", 4000, "Api server port")
+	flag.IntVar(&cfg.port, "", 5000, "Api server port")
 	flag.Parse()
 
 	logger := log.New(os.Stdout, "", log.Ldate|log.Ltime)

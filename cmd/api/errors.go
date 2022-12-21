@@ -1,6 +1,9 @@
 package main
 
-import "net/http"
+import (
+	"fmt"
+	"net/http"
+)
 
 func (app *application) logError(r *http.Request, err error) {
 	app.logger.Println(err)
@@ -28,7 +31,10 @@ func (app *application) notFoundResponse(w http.ResponseWriter, r *http.Request)
 	app.errorResponse(w, r, http.StatusNotFound, m)
 }
 
-func (app *application) methodNotAllowed(w http.ResponseWriter, r *http.Request) {
-	m := "the request cannot be found"
+func (app *application) methodNotAllowedResponse(w http.ResponseWriter, r *http.Request) {
+	m := fmt.Sprintf("the %s method is not supported for this resource", r.Method)
 	app.errorResponse(w, r, http.StatusMethodNotAllowed, m)
+}
+func (app *application) badRequestResponse(w http.ResponseWriter, r *http.Request, err error) {
+	app.errorResponse(w, r, http.StatusBadRequest, err.Error())
 }

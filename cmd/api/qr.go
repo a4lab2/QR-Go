@@ -1,27 +1,40 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 	"pqrgen/internal/data"
 	"time"
 )
 
-func (app *application) showUrlHandler(w http.ResponseWriter, r *http.Request) {
-	id, err := app.readIDParam(r)
-	if err != nil {
-		app.notFoundResponse(w, r)
-		return
+func (app *application) generateImageHandler(w http.ResponseWriter, r *http.Request) {
+	input := struct {
+		dataKind     data.Qtype
+		createdAt    time.Time
+		qr_code_text string
+	}{
+		dataKind:     1,
+		createdAt:    time.Now(),
+		qr_code_text: "Hello There",
 	}
 
-	urlData := data.UrlData{
-		ID:             id,
-		CreatedAt:      time.Now(),
-		Url:            "The url to encode",
-		Downloadswitch: true,
-	}
+	// err := app.readJSON(w, r, &input)
+	// if err != nil {
+	// 	app.badRequestResponse(w, r, err)
+	// 	return
+	// }
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"urlData": urlData}, nil)
-	if err != nil {
-		app.serverErrorResponse(w, r, err)
+	qr := &data.QRData{
+		DataKind:     input.dataKind,
+		CreatedAt:    input.createdAt,
+		Qr_code_text: input.qr_code_text,
 	}
+	println(qr)
+	// err = json.NewDecoder(r.Body).Decode(&input)
+	// if err != nil {
+	// 	app.errorResponse(w, r, http.StatusBadRequest, err.Error())
+	// 	return
+
+	// }
+	fmt.Fprintf(w, "%+v\n", input)
 }
